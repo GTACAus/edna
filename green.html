@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Group - Multi-Sample Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* GTAC HERO COLOURS & PASTEL CORAL BACKGROUND THEME */
+        :root {
+            --pastel-coral-bg: #E6F4EA;
+            --pastel-coral-card: #CEEAD6;
+            --sodium-flame: #FF6D3A;
+            --cadmium-yellow: #FFCD1F;
+            --chlorophyll-green: #00BC74;
+            --aquamarine: #6BE7BE;
+            --lavender: #C0ADFF;
+            --cobalt-blue: #4C34E5;
+            --onyx: #272A24;
+
+            /* Helper Token Mappings */
+            --dark-accent: var(--cobalt-blue);
+            --text-on-light: var(--onyx);
+            --border-color: var(--aquamarine);
+        }
+
+        /* General Styling */
+        body { 
+            font-family: 'Figtree', sans-serif; 
+            margin: 0; 
+            padding: 20px; 
+            background-color: var(--pastel-coral-bg); 
+            color: var(--text-on-light); 
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding-bottom: 80px;
+        }
+
+        /* HEADER BRANDING */
+        .header-branding {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 25px;
+            cursor: pointer;
+            user-select: none;
+            padding: 12px;
+            border-radius: 8px;
+            background-color: rgba(255, 109, 58, 0.06);
+            border: 1px dashed rgba(255, 109, 58, 0.2);
+            transition: background-color 0.2s;
+        }
+        .header-branding:hover {
+            background-color: rgba(255, 109, 58, 0.12);
+        }
+
+        .gtac-logo {
+            max-height: 50px;
+            width: auto;
+        }
+
+        h1 { 
+            color: var(--cobalt-blue); 
+            border-bottom: 4px solid var(--sodium-flame); 
+            padding-bottom: 10px; 
+            margin: 0;
+            font-weight: 800;
+            font-size: 28px;
+        }
+
+        /* JUMBO SAMPLE TABS (TOP LEVEL) */
+        .jumbo-tabs-container {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .jumbo-tab-btn {
+            flex: 1;
+            padding: 18px;
+            border: 2px solid var(--onyx);
+            background: white;
+            font-size: 18px;
+            font-weight: 800;
+            font-family: 'Figtree', sans-serif;
+            cursor: pointer;
+            color: var(--onyx);
+            border-radius: 12px;
+            box-shadow: 0 4px 0 var(--onyx);
+            transition: all 0.1s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .jumbo-tab-btn:hover {
+            background-color: var(--lavender);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 var(--onyx);
+        }
+
+        .jumbo-tab-btn.active {
+            background-color: var(--cadmium-yellow);
+            color: var(--onyx);
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--onyx);
+        }
+
+        /* ORGANISM SUB-TABS (SECONDARY LEVEL) */
+        .tabs-container {
+            display: flex;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 20px;
+            background: var(--pastel-coral-bg);
+            border-radius: 10px 10px 0 0;
+            overflow: hidden;
+            gap: 5px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 14px 10px;
+            border: 2px solid var(--border-color);
+            border-bottom: none;
+            background: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Figtree', sans-serif;
+            cursor: pointer;
+            color: var(--onyx);
+            transition: all 0.2s ease;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--lavender);
+        }
+
+        /* Dynamic Organism Active States */
+        .tab-btn.active { color: white; border-color: var(--onyx); }
+        .tab-btn:nth-child(1).active { background-color: var(--cobalt-blue); }
+        .tab-btn:nth-child(2).active { background-color: var(--sodium-flame); }
+        .tab-btn:nth-child(3).active { background-color: var(--chlorophyll-green); }
+        .tab-btn:nth-child(4).active { background-color: var(--dark-accent); }
+        .tab-btn:nth-child(5).active { background-color: var(--onyx); } /* Hidden Other */
+
+        #btn_other_tab {
+            display: none;
+        }
+
+        /* Content Display Panels */
+        .tab-content {
+            display: none;
+            background-color: var(--pastel-coral-card);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.04);
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Sequence Card Templates */
+        .read-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 18px;
+            position: relative;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .read-header {
+            font-family: 'Figtree', sans-serif;
+            font-weight: 700;
+            color: var(--onyx);
+            margin-bottom: 10px;
+            padding-right: 140px;
+            word-break: break-all;
+            font-size: 14px;
+        }
+
+        .read-sequence {
+            font-family: 'Figtree', sans-serif;
+            background: var(--pastel-coral-bg);
+            padding: 12px;
+            border-radius: 5px;
+            word-break: break-all;
+            white-space: pre-wrap;
+            color: var(--onyx);
+            border: 1px solid var(--border-color);
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Tab Border Side Accents */
+        #tetrapod .read-sequence { border-left: 5px solid var(--cobalt-blue); }
+        #bony_fish .read-sequence { border-left: 5px solid var(--sodium-flame); }
+        #decapods .read-sequence { border-left: 5px solid var(--chlorophyll-green); }
+        #macro .read-sequence { border-left: 5px solid var(--dark-accent); }
+        #other_tab .read-sequence { border-left: 5px solid var(--onyx); }
+
+        /* Clipboard Copy Utilities */
+        .copy-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background-color: var(--chlorophyll-green);
+            color: white;
+            border: 1px solid var(--onyx);
+            padding: 8px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+            font-family: 'Figtree', sans-serif;
+            transition: background-color 0.15s;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--onyx);
+            color: var(--pastel-coral-bg);
+        }
+
+        .copy-btn.copied {
+            background-color: var(--lavender);
+            color: var(--onyx);
+        }
+
+        /* Floating NCBI Portal Accessor */
+        .floating-blast-btn {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background-color: var(--cobalt-blue);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 1000;
+            border: 1px solid var(--onyx);
+        }
+
+        .floating-blast-btn:hover {
+            background-color: var(--sodium-flame);
+            transform: scale(1.05);
+        }
+
+        .no-data {
+            text-align: center;
+            color: var(--onyx);
+            padding: 20px;
+            font-style: italic;
+        }
+
+        /* MOBILE RESPONSIVE DESIGN (Pixel 7 & Similar) */
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+                margin: 0;
+            }
+
+            .container {
+                max-width: 100%;
+                padding-bottom: 120px;
+            }
+
+            /* Header Stacking */
+            .header-branding {
+                flex-direction: column;
+                gap: 12px;
+                padding: 10px;
+                margin-bottom: 18px;
+            }
+
+            h1 {
+                font-size: 20px;
+                padding-bottom: 8px;
+                margin: 0;
+            }
+
+            .gtac-logo {
+                max-height: 35px;
+            }
+
+            /* Jumbo Sample Tabs - Stack Vertically */
+            .jumbo-tabs-container {
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 16px;
+            }
+
+            .jumbo-tab-btn {
+                padding: 14px;
+                font-size: 14px;
+                box-shadow: 0 2px 0 var(--onyx);
+            }
+
+            .jumbo-tab-btn:hover {
+                box-shadow: 0 3px 0 var(--onyx);
+            }
+
+            /* Organism Tabs - Horizontal Scroll with Smaller Text */
+            .tabs-container {
+                display: flex;
+                overflow-x: auto;
+                overflow-y: hidden;
+                gap: 4px;
+                padding-bottom: 8px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .tab-btn {
+                flex: 0 0 auto;
+                min-width: 90px;
+                padding: 10px 8px;
+                font-size: 11px;
+                font-weight: 700;
+                white-space: nowrap;
+                border-radius: 6px 6px 0 0;
+            }
+
+            /* Read Cards - Optimized for Mobile */
+            .read-card {
+                padding: 14px;
+                margin-bottom: 12px;
+                border-radius: 6px;
+            }
+
+            .read-header {
+                font-size: 12px;
+                padding-right: 100px;
+                margin-bottom: 8px;
+            }
+
+            .read-sequence {
+                font-size: 11px;
+                padding: 10px;
+                line-height: 1.3;
+                letter-spacing: 0.3px;
+            }
+
+            /* Copy Button - Mobile Optimized */
+            .copy-btn {
+                top: 12px;
+                right: 12px;
+                padding: 6px 10px;
+                font-size: 10px;
+                border-radius: 4px;
+            }
+
+            /* Floating BLAST Button - Mobile Position */
+            .floating-blast-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 18px;
+                font-size: 12px;
+                border-radius: 40px;
+            }
+
+            /* Tab Content - Adjust Max Height */
+            .tab-content {
+                max-height: 55vh;
+                padding: 16px;
+            }
+        }
+
+        /* Extra Small Devices (< 400px) */
+        @media (max-width: 399px) {
+            body {
+                padding: 8px;
+            }
+
+            h1 {
+                font-size: 18px;
+            }
+
+            .jumbo-tab-btn {
+                padding: 12px;
+                font-size: 12px;
+            }
+
+            .tab-btn {
+                min-width: 75px;
+                font-size: 10px;
+                padding: 8px 6px;
+            }
+
+            .read-header {
+                padding-right: 85px;
+                font-size: 11px;
+            }
+
+            .read-sequence {
+                font-size: 10px;
+                padding: 8px;
+            }
+
+            .copy-btn {
+                padding: 5px 8px;
+                font-size: 9px;
+            }
+
+            .floating-blast-btn {
+                padding: 10px 14px;
+                font-size: 11px;
+            }
+        }
+
+        /* Landscape Mode Adjustments */
+        @media (max-height: 500px) {
+            .container {
+                padding-bottom: 80px;
+            }
+
+            .tab-content {
+                max-height: 45vh;
+            }
+
+            .read-card {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-branding" id="gtac_header_trigger" onclick="handleHeaderClick()">
+        <h1>Green Group Data</h1>
+        <img src="https://gtac.edu.au/wp-content/themes/gtac/assets/images/logo-2024.png" alt="GTAC Logo" class="gtac-logo">
+    </div>
+
+    <div class="jumbo-tabs-container">
+        <button class="jumbo-tab-btn active" id="btn_sample1" onclick="switchSample('sample1')">🧬 Sample 1 Data</button>
+        <button class="jumbo-tab-btn" id="btn_sample2" onclick="switchSample('sample2')">🧬 Sample 2 Data</button>
+    </div>
+
+    <div class="tabs-container">
+        <button class="tab-btn active" id="target_btn_tetrapod" onclick="switchOrganismTab('tetrapod')">A - Vertebrates</button>
+        <button class="tab-btn" id="target_btn_bony_fish" onclick="switchOrganismTab('bony_fish')">B - Bony Fish</button>
+        <button class="tab-btn" id="target_btn_decapods" onclick="switchOrganismTab('decapods')">C - Decapods</button>
+        <button class="tab-btn" id="target_btn_macro" onclick="switchOrganismTab('macro')">D - Macroinvertebrates</button>
+        <button class="tab-btn" id="btn_other_tab" onclick="switchOrganismTab('other_tab')">E - Other</button>
+    </div>
+
+    <div id="tetrapod" class="tab-content active"><div class="no-data">Processing matrix arrays...</div></div>
+    <div id="bony_fish" class="tab-content"><div class="no-data">Processing matrix arrays...</div></div>
+    <div id="decapods" class="tab-content"><div class="no-data">Processing matrix arrays...</div></div>
+    <div id="macro" class="tab-content"><div class="no-data">Processing matrix arrays...</div></div>
+    <div id="other_tab" class="tab-content"><div class="no-data">Processing matrix arrays...</div></div>
+</div>
+
+<a href="https://blast.ncbi.nlm.nih.gov/Blast.cgi?PROGRAM=blastn&PAGE_TYPE=BlastSearch&LINK_LOC=blasthome" 
+   target="_blank" 
+   class="floating-blast-btn">
+   🧬 Run BlastN
+</a>
+
+<script>
+    const groupMapping = {
+        "***Tetrapod_vertibrates***": "tetrapod",
+        "***Bony_fish***": "bony_fish",
+        "***Decapods***": "decapods",
+        "***Macroinvertibrates***": "macro",
+        "***Other***": "other_tab"
+    };
+
+    // Split Memory Cache Store Engine to house distinct files cleanly
+    let datasets = {
+        sample1: { tetrapod: [], bony_fish: [], decapods: [], macro: [], other_tab: [] },
+        sample2: { tetrapod: [], bony_fish: [], decapods: [], macro: [], other_tab: [] }
+    };
+
+    // Tracking variables for runtime environment
+    let currentSample = "sample1"; 
+    let currentOrganism = "tetrapod";
+    let clickTimestamps = [];
+    let otherTabUnlocked = false;
+
+    // Handles the rolling 3 clicks / 5 second unlock window for both states simultaneously
+    function handleHeaderClick() {
+        const now = Date.now();
+        clickTimestamps = clickTimestamps.filter(time => now - time < 5000);
+        clickTimestamps.push(now);
+
+        if (clickTimestamps.length >= 3) {
+            const secretTabButton = document.getElementById('btn_other_tab');
+            otherTabUnlocked = !otherTabUnlocked;
+
+            if (otherTabUnlocked) {
+                secretTabButton.style.display = 'block';
+            } else {
+                secretTabButton.style.display = 'none';
+                if (currentOrganism === 'other_tab') {
+                    // Safety jump fallback back to Tab A if user hides the section they're looking at
+                    switchOrganismTab('tetrapod');
+                }
+            }
+            clickTimestamps = [];
+        }
+    }
+
+    // High Level Sample swapper
+    function switchSample(sampleKey) {
+        document.getElementById('btn_sample1').classList.remove('active');
+        document.getElementById('btn_sample2').classList.remove('active');
+        
+        if(sampleKey === 'sample1') {
+            document.getElementById('btn_sample1').classList.add('active');
+        } else {
+            document.getElementById('btn_sample2').classList.add('active');
+        }
+
+        currentSample = sampleKey;
+        renderActiveViewport();
+    }
+
+    // Secondary level Filter swapper
+    function switchOrganismTab(organismKey) {
+        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        currentOrganism = organismKey;
+        
+        // Find element by target dynamic key map references
+        const targetBtnId = organismKey === 'other_tab' ? 'btn_other_tab' : `target_btn_${organismKey}`;
+        document.getElementById(targetBtnId).classList.add('active');
+        document.getElementById(organismKey).classList.add('active');
+        
+        renderActiveViewport();
+    }
+
+    function copySequence(button, textToCopy) {
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalText = button.innerText;
+            button.innerText = "COPIED ✓";
+            button.classList.add('copied');
+            setTimeout(() => {
+                button.innerText = originalText;
+                button.classList.remove('copied');
+            }, 1500);
+        }).catch(err => console.error('Copy mismatch:', err));
+    }
+
+    // Generic structural file parser engine targeted by context pointer array references
+    function parseFileContents(text, sampleTargetKey) {
+        const lines = text.split(/\r?\n/);
+        let currentDomId = null;
+        
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim();
+            if (!line) continue;
+
+            if (line.startsWith("***")) {
+                currentDomId = groupMapping[line] || null;
+                continue;
+            }
+
+            if (currentDomId && line.startsWith(">")) {
+                let header = line;
+                let sequence = "";
+                
+                if (i + 1 < lines.length && !lines[i + 1].trim().startsWith(">") && !lines[i + 1].trim().startsWith("***")) {
+                    i++;
+                    sequence = lines[i].trim();
+                }
+
+                if (sequence) {
+                    datasets[sampleTargetKey][currentDomId].push({ header, sequence });
+                }
+            }
+        }
+    }
+
+    // Renders the specific combination of current sample + current organism tab selected
+    function renderActiveViewport() {
+        const container = document.getElementById(currentOrganism);
+        container.innerHTML = ""; 
+
+        const activeArray = datasets[currentSample][currentOrganism];
+
+        if (activeArray.length === 0) {
+            container.innerHTML = `<div class="no-data">No records found for this organism subset inside ${currentSample === 'sample1' ? 'Sample 1' : 'Sample 2'}.</div>`;
+            return;
+        }
+
+        activeArray.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'read-card';
+
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'read-header';
+            headerDiv.innerText = item.header;
+
+            const seqDiv = document.createElement('div');
+            seqDiv.className = 'read-sequence';
+            seqDiv.innerText = item.sequence;
+
+            const button = document.createElement('button');
+            button.className = 'copy-btn';
+            button.innerText = 'Copy DNA';
+            button.onclick = () => copySequence(button, item.sequence);
+
+            card.appendChild(headerDiv);
+            card.appendChild(seqDiv);
+            card.appendChild(button);
+            container.appendChild(card);
+        });
+    }
+
+    // Dual pipeline data initialization routine loops
+    window.addEventListener('DOMContentLoaded', () => {
+        const loadSample1 = fetch('barcode03.txt').then(res => { if(!res.ok) throw new Error(); return res.text(); });
+        const loadSample2 = fetch('barcode04.txt').then(res => { if(!res.ok) throw new Error(); return res.text(); });
+
+        Promise.all([loadSample1, loadSample2])
+            .then(([data1, data2]) => {
+                parseFileContents(data1, 'sample1');
+                parseFileContents(data2, 'sample2');
+                // Kickoff visualizer load state parameters
+                switchOrganismTab('tetrapod');
+            })
+            .catch(error => {
+                console.error("Initialization fault metrics detected:", error);
+                document.querySelectorAll('.tab-content').forEach(container => {
+                    container.innerHTML = `<div class="no-data" style="color:var(--sodium-flame); font-weight: bold;">Pipeline Error: Ensure BOTH 'barcode03.txt' and 'barcode04.txt' are running inside your local folder path server root.</div>`;
+                });
+            });
+    });
+</script>
+
+</body>
+</html>
