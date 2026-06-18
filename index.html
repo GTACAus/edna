@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yarra River eDNA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* GTAC HERO COLOURS & EGGSHELL WHITE THEME */
+        :root {
+            --eggshell-bg: #FDFBF7;
+            --card-base: #FFFFFF;
+            
+            /* Group Colorways */
+            --red-group: #FF4D4D;
+            --green-group: #00BC74;
+            --blue-group: #4C34E5;
+            --yellow-group: #FFCD1F;
+            --purple-group: #C0ADFF;
+            
+            --sodium-flame: #FF6D3A;
+            --onyx: #272A24;
+            --aquamarine: #6BE7BE;
+        }
+
+        body { 
+            font-family: 'Figtree', sans-serif; 
+            margin: 0; 
+            padding: 40px 20px; 
+            background-color: var(--eggshell-bg); 
+            color: var(--onyx); 
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* HEADER BRANDING */
+        .header-branding {
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 4px solid var(--sodium-flame); 
+        }
+
+        .header-text h1 {
+            color: var(--blue-group); 
+            margin: 0;
+            font-weight: 800;
+            font-size: 32px;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .header-text p {
+            margin: 5px 0 0 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: rgba(39, 42, 36, 0.65);
+        }
+
+        .gtac-logo {
+            max-height: 55px;
+            width: auto;
+        }
+
+        /* CARD MATRIX ROUTER SYSTEM */
+        .router-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .route-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--card-base);
+            border: 2px solid var(--onyx);
+            border-radius: 14px;
+            padding: 24px 30px;
+            text-decoration: none;
+            color: var(--onyx);
+            box-shadow: 0 6px 0 var(--onyx);
+            transition: all 0.15s ease;
+        }
+
+        .route-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 var(--onyx);
+        }
+
+        .route-card:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 var(--onyx);
+        }
+
+        .group-meta {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        /* Dynamic left color pillar accent indicators */
+        .color-indicator {
+            width: 16px;
+            height: 50px;
+            border-radius: 6px;
+            border: 1px solid var(--onyx);
+        }
+
+        .red-accent    { background-color: var(--red-group); }
+        .green-accent  { background-color: var(--green-group); }
+        .blue-accent   { background-color: var(--blue-group); }
+        .yellow-accent { background-color: var(--yellow-group); }
+        .purple-accent { background-color: var(--purple-group); }
+
+        .group-title {
+            font-size: 20px;
+            font-weight: 800;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .group-samples {
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(39, 42, 36, 0.6);
+            margin-top: 2px;
+        }
+
+        .action-arrow {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--onyx);
+            transition: transform 0.2s ease;
+        }
+
+        .route-card:hover .action-arrow {
+            transform: translateX(5px);
+        }
+
+        /* MOBILE RESPONSIVE OPTIMIZATION (Pixel 7 / iPhone Frame scales) */
+        @media (max-width: 640px) {
+            body {
+                padding: 20px 12px;
+            }
+
+            .header-branding {
+                flex-direction: column-reverse;
+                align-items: flex-start;
+                gap: 16px;
+                margin-bottom: 25px;
+            }
+
+            .header-text h1 {
+                font-size: 24px;
+            }
+
+            .header-text p {
+                font-size: 14px;
+            }
+
+            .gtac-logo {
+                max-height: 40px;
+            }
+
+            .route-card {
+                padding: 16px 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 0 var(--onyx);
+            }
+
+            .route-card:hover {
+                transform: none;
+                box-shadow: 0 4px 0 var(--onyx);
+            }
+
+            .route-card:active {
+                transform: translateY(2px);
+                box-shadow: 0 2px 0 var(--onyx);
+            }
+
+            .group-title {
+                font-size: 16px;
+            }
+
+            .group-samples {
+                font-size: 12px;
+            }
+
+            .color-indicator {
+                height: 40px;
+                width: 12px;
+            }
+
+            .action-arrow {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-branding">
+        <div class="header-text">
+            <h1>Yarra River eDNA</h1>
+            <p>Molecular Ecology: nanopore sequencing results</p>
+        </div>
+        <img src="https://gtac.edu.au/wp-content/themes/gtac/assets/images/logo-2024.png" alt="GTAC Logo" class="gtac-logo">
+    </div>
+
+    <div class="router-grid">
+        
+        <a href="red.html" class="route-card">
+            <div class="group-meta">
+                <div class="color-indicator red-accent"></div>
+                <div>
+                    <div class="group-title">Red Group</div>
+                    <div class="group-samples">Barcodes 01 & 02</div>
+                </div>
+            </div>
+            <div class="action-arrow">➔</div>
+        </a>
+
+        <a href="green.html" class="route-card">
+            <div class="group-meta">
+                <div class="color-indicator green-accent"></div>
+                <div>
+                    <div class="group-title">Green Group</div>
+                    <div class="group-samples">Barcodes 03 & 04</div>
+                </div>
+            </div>
+            <div class="action-arrow">➔</div>
+        </a>
+
+        <a href="blue.html" class="route-card">
+            <div class="group-meta">
+                <div class="color-indicator blue-accent"></div>
+                <div>
+                    <div class="group-title">Blue Group</div>
+                    <div class="group-samples">Barcodes 05 & 06</div>
+                </div>
+            </div>
+            <div class="action-arrow">➔</div>
+        </a>
+
+        <a href="yellow.html" class="route-card">
+            <div class="group-meta">
+                <div class="color-indicator yellow-accent"></div>
+                <div>
+                    <div class="group-title">Yellow Group</div>
+                    <div class="group-samples">Barcodes 07 & 08</div>
+                </div>
+            </div>
+            <div class="action-arrow">➔</div>
+        </a>
+
+        <a href="purple.html" class="route-card">
+            <div class="group-meta">
+                <div class="color-indicator purple-accent"></div>
+                <div>
+                    <div class="group-title">Purple Group</div>
+                    <div class="group-samples">Barcodes 09 & 10</div>
+                </div>
+            </div>
+            <div class="action-arrow">➔</div>
+        </a>
+
+    </div>
+</div>
+
+</body>
+</html>
