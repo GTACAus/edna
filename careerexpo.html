@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTAC Scientist Session Lookup</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+    
+    <style>        
+        /* GTAC HERO COLOURS AS CSS VARIABLES */        
+        :root {            
+            --eggshell: #F9F6E7;            
+            --sodium-flame: #FF6D3A;            
+            --cadmium-yellow: #FFCD1F;            
+            --chlorophyll-green: #00BC74;            
+            --aquamarine: #6BE7BE;            
+            --lavender: #C0ADFF;            
+            --cobalt-blue: #4C34E5;            
+            --onyx: #272A24;
+            
+            /* Helper Tints/Shades for accessibility or borders */            
+            --dark-accent: var(--cobalt-blue);            
+            --secondary-accent: var(--chlorophyll-green);            
+            --tertiary-accent: var(--sodium-flame);            
+            --text-on-light: var(--onyx);            
+            --text-on-dark: var(--eggshell);        
+        }
+        
+        /* General Styling */        
+        body {             
+            /* APPLY FIGTREE FONT */            
+            font-family: 'Figtree', sans-serif;             
+            margin: 0;             
+            padding: 20px;             
+            /* Background: Eggshell (light base) */            
+            background-color: var(--eggshell);             
+            /* Primary Text: Onyx (on light background) */            
+            color: var(--text-on-light);         
+        }
+        
+        /* HEADER BRANDING (New Container for Title and Logo) */        
+        .header-branding {            
+            display: flex;            
+            justify-content: space-between;             
+            align-items: center;             
+            margin-bottom: 30px;        
+        }        
+        .gtac-logo {            
+            max-height: 50px;            
+            width: auto;        
+        }
+        
+        /* H1: Cobalt Blue on Eggshell, Border: Sodium Flame for visual pop */        
+        h1 {             
+            color: var(--cobalt-blue);             
+            border-bottom: 4px solid var(--sodium-flame); /* Bold, bright accent */            
+            padding-bottom: 10px;             
+            margin-bottom: 0; /* Adjusted to be controlled by .header-branding */        
+        }
+        
+        /* H2: Onyx on Eggshell, Border: Chlorophyll Green */        
+        h2 {             
+            color: var(--text-on-light);             
+            margin-top: 40px;             
+            margin-bottom: 20px;             
+            border-left: 5px solid var(--chlorophyll-green);             
+            padding-left: 10px;         
+        }
+        
+        /* Project Container & Separators - Reused for main content sections */        
+        .content-container {            
+            margin-top: 30px;            
+            padding: 25px;            
+            /* Border: Aquamarine */            
+            border: 1px solid var(--aquamarine);            
+            border-radius: 10px;            
+            /* Background: Maintain Eggshell for consistency */            
+            background-color: var(--eggshell);            
+            /* Box Shadow remains neutral */            
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);        
+        }
+        
+        /* Header wrapper */        
+        .header-wrapper {            
+            position: relative;            
+            display: block;        
+        }                
+        /* Branding stays visible */        
+        .header-branding {            
+            cursor: pointer;        
+        }                
+
+        /* Interactive Custom Dropdown Menu Elements */
+        .selector-box {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            border: 2px solid var(--cobalt-blue);
+            max-width: 500px;
+            margin: 20px auto;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .selector-box label {
+            font-weight: bold;
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 12px;
+            color: var(--onyx);
+        }
+
+        select {
+            font-family: 'Figtree', sans-serif;
+            font-size: 1.1em;
+            padding: 12px 15px;
+            border-radius: 6px;
+            border: 2px solid var(--aquamarine);
+            background-color: var(--eggshell);
+            color: var(--onyx);
+            width: 100%;
+            max-width: 400px;
+            cursor: pointer;
+            outline: none;
+            font-weight: 500;
+        }
+
+        select:focus {
+            border-color: var(--cobalt-blue);
+        }
+
+        .schedule-display {
+            display: none;
+            max-width: 650px;
+            margin: 30px auto;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .session-card {
+            background: white;
+            border-radius: 8px;
+            padding: 18px 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+            border-left: 8px solid var(--cobalt-blue);
+        }
+
+        .session-card.s1 { border-left-color: var(--cobalt-blue); }
+        .session-card.s2 { border-left-color: var(--sodium-flame); }
+        .session-card.s3 { border-left-color: var(--chlorophyll-green); }
+
+        .session-time {
+            font-size: 0.9em;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .scientist-name {
+            font-size: 1.35em;
+            font-weight: 700;
+            color: var(--cobalt-blue);
+            margin-bottom: 3px;
+        }
+
+        .scientist-affiliation {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--onyx);
+            opacity: 0.85;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-wrapper">  
+        <div class="header-branding">      
+            <h1>🚀 GTAC - Scientist Session Finder</h1>      
+            <img src="https://gtac.edu.au/wp-content/themes/gtac/assets/images/logo-2024.png" alt="GTAC Logo" class="gtac-logo">  
+        </div>
+    </div>
+
+    <div class="content-container">
+        <div class="selector-box">
+            <label for="studentSelect">Find your custom 3-session schedule:</label>
+            <select id="studentSelect" onchange="showSchedule()">
+                <option value="" disabled selected>-- Select your name --</option>
+                </select>
+        </div>
+
+        <div id="scheduleDisplay" class="schedule-display">
+            <h2 id="displayName">Student Schedule</h2>
+            
+            <div class="session-card s1">
+                <div class="session-time">Session 1 (00:00 - 00:20)</div>
+                <div class="scientist-name" id="s1Name">-</div>
+                <div class="scientist-affiliation" id="s1Affil">-</div>
+            </div>
+
+            <div class="session-card s2">
+                <div class="session-time">Session 2 (00:20 - 00:40)</div>
+                <div class="scientist-name" id="s2Name">-</div>
+                <div class="scientist-affiliation" id="s2Affil">-</div>
+            </div>
+
+            <div class="session-card s3">
+                <div class="session-time">Session 3 (00:40 - 01:00)</div>
+                <div class="scientist-name" id="s3Name">-</div>
+                <div class="scientist-affiliation" id="s3Affil">-</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scientist Profile Mapping
+        const scientists = {
+            1: { name: "Ashley Firth", affil: "Bio21 Molecular Sciences and Biotechnology Institute" },
+            2: { name: "Laura Almagro Puente", affil: "Department of Biochemistry and Pharmacology, University of Melbourne" },
+            3: { name: "Patrick (Paddy) Barry", affil: "Murdoch Children's Research Institute" },
+            4: { name: "Millicent Ekwudo", affil: "Florey Institute of Neuroscience and Mental Health" },
+            5: { name: "Michelle Ma", affil: "Cognitive Neuroscientist | Biophysicist" }
+        };
+
+        // Master Schedule Allocations (Strictly capped at max 7 students per scientist per session)
+        const schedules = {
+            "Abby Pepi": [1, 3, 4],
+            "Ainsleigh": [5, 2, 1],
+            "Anamitra Rajbharath": [3, 2, 4],
+            "Archie Sheawick": [2, 1, 5],
+            "Ashley Godman": [4, 5, 3],
+            "Chhun solika Heng": [3, 5, 4],
+            "Dante Hristovski": [1, 5, 2],
+            "David Alaifea": [1, 2, 4],
+            "Dwisha Kalyani": [1, 3, 2],
+            "Elliot": [4, 2, 1],
+            "Evie": [2, 5, 3],
+            "Hamish": [2, 1, 1],
+            "Hao": [1, 3, 2],
+            "Hasini saravanan": [1, 3, 2],
+            "Hunter": [4, 2, 1],
+            "Ivy": [2, 4, 1],
+            "Izaac Tauiliili": [1, 3, 5],
+            "Jason Dao": [5, 3, 5],
+            "Julia Rozenkova": [1, 1, 2],
+            "Karin": [3, 3, 2],
+            "Karina Kurzawa": [1, 1, 2],
+            "Lajeen Doski": [1, 2, 4],
+            "Mannat Pandher": [2, 5, 3],
+            "Mason Hristovski": [2, 1, 4],
+            "Ramona Richardson": [3, 5, 4],
+            "Reka simon": [4, 1, 5],
+            "Rimsha": [2, 4, 3],
+            "sadie": [3, 4, 3],
+            "Steph": [5, 2, 3]
+        };
+
+        // Populate dropdown with sorted student names
+        const selectElement = document.getElementById('studentSelect');
+        Object.keys(schedules).sort().forEach(student => {
+            let option = document.createElement('option');
+            option.value = student;
+            option.textContent = student;
+            selectElement.appendChild(option);
+        });
+
+        // Update display card information dynamically
+        function showSchedule() {
+            const student = selectElement.value;
+            if (!student) return;
+
+            const studentSessions = schedules[student];
+            
+            document.getElementById('displayName').innerText = "👋 " + student + "'s Schedule";
+            
+            // Session 1 Details
+            document.getElementById('s1Name').innerText = scientists[studentSessions[0]].name;
+            document.getElementById('s1Affil').innerText = scientists[studentSessions[0]].affil;
+            
+            // Session 2 Details
+            document.getElementById('s2Name').innerText = scientists[studentSessions[1]].name;
+            document.getElementById('s2Affil').innerText = scientists[studentSessions[1]].affil;
+            
+            // Session 3 Details
+            document.getElementById('s3Name').innerText = scientists[studentSessions[2]].name;
+            document.getElementById('s3Affil').innerText = scientists[studentSessions[2]].affil;
+            
+            // Display container with fade-in effect
+            document.getElementById('scheduleDisplay').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
